@@ -1,0 +1,65 @@
+---
+- hosts: localhost
+  become: yes
+  tasks:
+ 
+
+# 1. Create required login user for developer to run docker build
+    - name: Create user for devloper team
+      user: name=developer state=present group=developer
+
+
+
+#2. Install docker
+    - name: Install docker prerequisite
+      yum: 
+        name: "{{ item }}" 
+        state: latest
+      with_items:
+         - yum-utils
+         - device-mapper-persistent-data
+         - lvm2
+
+
+    - name: Configure yum repo for docker
+      yum_repository:
+        name: myDocker
+        description: "Docker CE Stable - $basearch"
+        baseurl: https://download.docker.com/linux/centos/7/$basearch/stable
+        gpgcheck: True
+        gpgkey: https://download.docker.com/linux/centos/gpg
+ 
+   
+    - name: Installing Docker
+      yum: 
+        name: "{{ item }}" 
+        state: latest
+      with_items:
+         - docker-ce 
+         - docker-ce-cli
+         - containerd.io
+
+
+
+#3. Install maven
+    - name: Download maven
+      get_url:
+          url: http://apache.claz.org/maven/maven-3/3.5.4/binaries/apache-maven-3.5.4-bin.tar.gz
+          dest: /opt
+          timeout: 600
+
+    - name: Unarchive maven
+      unarchive:
+        src: http://apache.claz.org/maven/maven-3/3.5.4/binaries/apache-maven-3.5.4-bin.tar.gz
+        dest: /opt
+        remote_src: yes
+
+    - name: Export Maven path
+      shell: export PATH=$PATH:/opt/apache-maven-3.5.4/bin
+
+
+
+#4. Start docker service
+    - name: Start Docker service
+      service: name=docker state=started
+

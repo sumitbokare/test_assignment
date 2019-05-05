@@ -1,0 +1,25 @@
+node {
+
+stage ('clone git repo'){
+git 'https://github.com/kuberguy/helloworld'
+mvnHome = tool 'maven_3_5'
+}
+
+stage ('Build jar'){
+sh "'$mvnHome/bin/mvn' -Dmaven.test.failure.ignore clean package"
+}
+
+stage ('Build docker image'){
+sh "mv ./target/hello*.jar ./data"
+dockerImage = docker.build("hello-world-java")
+}
+
+
+stage ('Deploy Docker Image'){
+withDockerRegistry ([url: "", credentialsId: "mydockerid"]) {
+sh "docker tag hello-world-java sumit7xp/hello-world-java:${env.BUILD_NUMBER}"
+sh "docker push sumit7xp/hello-world-java:${env.BUILD_NUMBER}"
+}
+}
+
+}

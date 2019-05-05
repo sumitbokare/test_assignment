@@ -1,0 +1,11 @@
+node {
+
+stage ('Create Deployment for docker image hello-world'){
+sh "kubectl create -f hello_world.yml"
+}
+
+
+stage ('Curl Test') {
+sh "curl localhost:8089/hello"
+}
+}
