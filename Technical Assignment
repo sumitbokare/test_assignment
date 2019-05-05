@@ -1,0 +1,27 @@
+Technical Assignment
+Application team is preparing a docker based application [ hello-world]
+You need to prepare the required infrastructure (CI/CD) to build and deploy the docker based application either in kubernetes or OCP ( RHEL openshift )
+Please use below sample “helloworld” application
+Hello-world application: https://github.com/kuberguy/helloworld
+
+Part A: Write a Ansible playbook/role to do below on build machine
+1. Create required login user for developer to run docker build
+2. Install docker
+3. Install maven
+4. Start docker service
+
+Part B: Create a Jenkins pipeline [ use stages]
+1. Write a logic to clone application source code from github
+2. Compile and build from sources using maven
+3. Build a docker image using jdk base image for above generated jar
+4. The generated docker image should run the above hello world application when container is created using the docker image
+5. Push docker image to registry [ docker hub for example]
+
+Part C: Jenkins pipeline[stages] to deploy the docker image
+Assumption K8S/OCP is already installed and running
+1. Generate/create k8s deployment descriptors for above docker image created in Part B above
+2. Deploy the application to K8S/OCP
+3. Small test (ex curl/wget) to get output as “Hello world” from above deployment
+
+Please upload your code in github and share the github repository url
+Please also specify which all steps would fall under CI pipeline and which all steps would be part of CD pipeline?
