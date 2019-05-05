@@ -1,0 +1,19 @@
+---
+ apiVersion: extesions/v1beta1
+ kind: Deployment
+ metadata:
+   name: hello-world
+ spec:
+   replicas: 1
+   template:
+      metadata:
+        labels:
+          app: hello-world
+      spec:
+        containers:
+          name: hello-world
+          image: hello-world
+          command: ["/usr/bin/java"]
+          args ["-jar", "/data/hello-world-0.1.0.jar"]
+          ports:
+            - containerPort: 8089
